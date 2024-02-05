@@ -1,0 +1,11 @@
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/adlist.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/abuse.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/malware.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/coinmining.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/phishing.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/privacy.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/redirect.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/spam.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/google_amp.txt
+b, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/regex.txt
+w, https://raw.githubusercontent.com/Levi2288/AdvancedBlockList/main/Lists/whitelist.txt
