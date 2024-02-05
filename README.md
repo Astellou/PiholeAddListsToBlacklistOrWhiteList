@@ -1,4 +1,4 @@
-# PiholeAddListsToBlacklistOrWhiteList
+# Pihole Add Lists To Blacklist Or WhiteList
 
 Usage : 
 
