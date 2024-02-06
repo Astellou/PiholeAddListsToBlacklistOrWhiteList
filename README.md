@@ -9,6 +9,14 @@ Récupération du fichier :
 wget https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/piholeAddLists.py
 ```
 
+Install python : 
+
+
+```
+sudo apt-get install python
+sudo python -m pip install requests
+```
+
 
 Help : 
 
