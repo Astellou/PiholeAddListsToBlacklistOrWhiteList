@@ -13,8 +13,9 @@ Install python :
 
 
 ```
-sudo apt-get install python
-sudo python -m pip install requests
+sudo apt-get update
+sudo apt-get install python3
+sudo apt-get install python3-requests
 ```
 
 
@@ -24,10 +25,18 @@ Help :
   python piholeAddLists.py -h
 ````
 
-Launch with list in parameters :
+
+
+Launch with list in parameters to add whitelist and blacklist :
 ```
-python piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
+python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
 ```
 
 
-#Example lists from https://github.com/Levi2288/AdvancedBlockList
+
+Launch with list in parameters to delete whitelist and blacklist (-l -d) :
+```
+python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
+```
+
+

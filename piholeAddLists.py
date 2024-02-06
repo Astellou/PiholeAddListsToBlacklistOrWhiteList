@@ -65,12 +65,9 @@ def main(argv):
             for domain in domainsList:
                 if len(domain.strip()) > 0:
                     command = PIHOLE_MANGEMENT_LISTS % (BorWValue, deleteNeeded, domain)
-                    print(command)
-                    #print(os.popen(command).read())
-                    sys.exit()
-                
-            
-        print(list)
+                    #print(command)
+                    print(os.popen(command).read())
+                    
 
     print('######### END OF MANAGING #########\n')
 
