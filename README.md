@@ -16,7 +16,7 @@ Help :
   python piholeAddLists.py -h
 ````
 
-Launch with list in parameters (every line should have in first parameter "b" or "w", then a comma "," and the list to add. Exemple without the quote "b, https://malistainclure.txt"
+Launch with list in parameters :
 ```
 python piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
 ```
