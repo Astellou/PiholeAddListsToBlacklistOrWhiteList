@@ -1,5 +1,11 @@
 # Pihole Add Lists To Blacklist Or WhiteList
 
+Récupération du fichier : 
+
+```
+   wget https://github.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/blob/main/piholeAddLists.py
+```
+
 Usage : 
 
 ```
