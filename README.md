@@ -3,7 +3,7 @@
 Récupération du fichier : 
 
 ```
-   wget https://github.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/blob/main/piholeAddLists.py
+   wget https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/piholeAddLists.py
 ```
 
 Usage : 
