@@ -3,7 +3,9 @@ import argparse
 import requests
 import os
 import validators
-	
+from datetime import datetime
+
+
 PARAM_LIST = 'list'
 PARAM_DELETE = 'delete'
 PARAM_VERBOSE = 'verbose'
@@ -75,6 +77,8 @@ def main(argv):
         print("----SUPPRESSION MODE ON ----\n")
 
 
+    now = datetime.now()
+    print("start = ", now)
 
     for list in getListsFromList(getattr(args, PARAM_LIST)):
 
@@ -111,7 +115,8 @@ def main(argv):
 
     print('######### DONE :) #########\n')
 
-
+    now = datetime.now()
+    print("end = ", now)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
