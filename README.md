@@ -17,27 +17,29 @@ sudo apt-get update
 sudo apt-get install python3
 sudo apt-get install python3-requests
 sudo apt-get install python3-validators
+sudo apt install sqlite3
 ```
 
 
 Help : 
 
 ```
-  python piholeAddLists.py -h
+/etc/pihole $ sudo -u pihole python3 python piholeAddLists.py -h
 ````
 
 
 
-Launch with list in parameters to add whitelist and blacklist :
+Launch where the database is located, by default /etc/pihole/
+with list in parameters to add whitelist and blacklist :
 ```
-python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
+/etc/pihole $ sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
 ```
 
 
 
 Launch with list in parameters to delete whitelist and blacklist (-l -d) :
 ```
-python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
+/etc/pihole $ sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
 ```
 
 

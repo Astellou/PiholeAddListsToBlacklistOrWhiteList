@@ -4,6 +4,8 @@ import requests
 import os
 import validators
 from datetime import datetime
+import sqlite3
+
 
 
 PARAM_LIST = 'list'
@@ -17,6 +19,11 @@ WHITELIST_VALUE = 'w'
 PIHOLE_UPDATE_GRAVITY = 'pihole -g' 
 PIHOLE_MANGEMENT_LISTS = "pihole -%s%s -nr %s > /dev/null"
 PIHOLE_MAX_VALUES_ONETIME = 5000
+
+
+GRAVITYDB="/etc/pihole/gravity.db"
+
+
 
 def getListValuesFromCall(url):
     response = requests.get(url)
@@ -63,7 +70,7 @@ def getGroupedDomains(domainsList):
 def main(argv):
     global isVerbose
 
-    print('######### MANAGE BLACKLISTS AND WHITELISTS #########')
+    print('\n######### MANAGE BLACKLISTS AND WHITELISTS #########')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--'+PARAM_LIST, help="list referencing every list to add", required=True)
@@ -71,49 +78,79 @@ def main(argv):
     args = parser.parse_args()
 
     # CHECK IF DELETE OR ADD (DEFAULT)
-    deleteNeeded = ''
+    deleteNeeded = False
     if getattr(args, PARAM_DELETE):
-        deleteNeeded = ' -d'
+        deleteNeeded = True
         print("----SUPPRESSION MODE ON ----\n")
 
 
     now = datetime.now()
     print("start = ", now)
 
+
+
+    sqliteConnection = ''
+    try:
+        print('\n######### DATABASE CONNECTION #########')
+        print(GRAVITYDB)
+        sqliteConnection = sqlite3.connect(GRAVITYDB)
+        cursor = sqliteConnection.cursor()
+        print("Database created and Successfully Connected to SQLite")
+
+
+    except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+            sys.exit()
+ 
+    countErrors = 0
     for list in getListsFromList(getattr(args, PARAM_LIST)):
 
         
         # CHECK THE FORMAT 'w, url' or 'b, url'
         listValues = list.split(',')
-  
+    
         if len(listValues) == 2 and listValues[0] in [BLACKLIST_VALUE, WHITELIST_VALUE]:
-       
-            BorWValue = listValues[0]
+        
+            typeId = 1 if listValues[0] == 'b' else 0
             LinkList = listValues[1]
 
             # ALL DOMAINS FROM THE LIST WITHOUT EMPTY ONES
             domainsList = getDomainsFromList(LinkList)
+            compteur = 0
+            for domain in domainsList:
+            
+                sqlite_Query = ''
+                if deleteNeeded == True:
+                    sqlite_Query = 	"DELETE FROM domainlist WHERE domain = '%s' AND type = %d;" % (domain, typeId)
+                elif deleteNeeded == False:
+                    sqlite_Query = 	"INSERT INTO domainlist (domain, type, comment) VALUES ('%s', %d, '');" % (domain, typeId)
+                    
+                try:
+                    cursor.execute(sqlite_Query)
+                    compteur += 1
+                except sqlite3.Error as error:
+                    countErrors += 1
+                    #print(domain+' is already in database')
 
-            # GROUP DOMAINS BY PACKETS OF `PIHOLE_MAX_VALUES_ONETIME` VALUES
-            domainsListGrouped = getGroupedDomains(domainsList)
+                # "DELETE FROM domainlist WHERE domain = '${domain}' AND type = ${typeId};"
+                # "INSERT INTO domainlist (domain,type,comment) VALUES ('${domain}',${typeId},'${comment}');"
+            print("\nvalues updated : %d / %d" % (compteur, len(domainsList)))
+            print("commit en cours")
+            sqliteConnection.commit()	
+            print("commit en done\n")
+            
 
-            # LAUNCH THE COMMAND BY PACKETS
-            indexGroup = 1
-            for domainsGrouped in domainsListGrouped:
-                print("group %d / %d" % (indexGroup, len(domainsListGrouped)))
-                command = PIHOLE_MANGEMENT_LISTS % (BorWValue, deleteNeeded, domainsGrouped)
-                os.system(command)
-                indexGroup += 1
-            print("\n")       
+
+    if sqliteConnection:
+        sqliteConnection.close()
+        print("The SQLite connection is closed")
 
     print('######### END OF MANAGING #########\n')
 
-    print('######### UPDATE GRAVITY #########\n')
-    print(os.popen(PIHOLE_UPDATE_GRAVITY).read()+"\n")
-    print('######### END UPDATE GRAVITY #########\n')
 
 
-    print('######### DONE :) #########\n')
+    print(' /!\\ NEED TO UPDATE GRAVITY /!\\ \n')
+
 
     now = datetime.now()
     print("end = ", now)
