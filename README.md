@@ -3,14 +3,7 @@
 @Credits : #Example lists from https://github.com/Levi2288/AdvancedBlockList
 
 
-
-Récupération du fichier : 
-```
-wget https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/piholeAddLists.py
-```
-
-Install python : 
-
+Install dependecies : 
 
 ```
 sudo apt-get update
@@ -20,11 +13,23 @@ sudo apt-get install python3-validators
 sudo apt install sqlite3
 ```
 
+go to the directory /etc/pihole: 
+```
+cd /etc/pihole
+```
+
+
+get the file : 
+```
+wget https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/piholeAddLists.py
+```
+
+
 
 Help : 
 
 ```
-/etc/pihole $ sudo -u pihole python3 python piholeAddLists.py -h
+sudo -u pihole python3 python piholeAddLists.py -h
 ````
 
 
@@ -32,14 +37,14 @@ Help :
 Launch where the database is located, by default /etc/pihole/
 with list in parameters to add whitelist and blacklist :
 ```
-/etc/pihole $ sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
+sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
 ```
 
 
 
-Launch with list in parameters to delete whitelist and blacklist (-l -d) :
+Launch with list in parameters to delete whitelist and blacklist (-d) :
 ```
-/etc/pihole $ sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
+sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
 ```
 
 
