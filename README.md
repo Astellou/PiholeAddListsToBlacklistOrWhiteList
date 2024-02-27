@@ -2,6 +2,7 @@
 
 @Credits : #Example lists from https://github.com/Levi2288/AdvancedBlockList
 
+Goal ? Easily add list to blacklist and whitelite domains
 
 Install dependecies : 
 
@@ -42,7 +43,7 @@ sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/As
 
 
 
-Launch with list in parameters to delete whitelist and blacklist (-d) :
+Launch with -d in parameters to delete whitelist :
 ```
 sudo -u pihole python3 piholeAddLists.py -l https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt -d
 ```
