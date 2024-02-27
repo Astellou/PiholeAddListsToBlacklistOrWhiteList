@@ -41,6 +41,7 @@ def getListsFromList(list):
 
 
 
+
 def getDomainsFromList(list):
     domainsListRaw = getListValuesFromCall(list)
     domainsList = []
@@ -70,8 +71,10 @@ def getGroupedDomains(domainsList):
 def main(argv):
     global isVerbose
 
-    print('\n######### MANAGE BLACKLISTS AND WHITELISTS #########')
+    print('######### MANAGE BLACKLISTS AND WHITELISTS #########')
 
+    # LIST EXEMPLE
+    #https://raw.githubusercontent.com/Astellou/PiholeAddListsToBlacklistOrWhiteList/main/List.txt
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--'+PARAM_LIST, help="list referencing every list to add", required=True)
     parser.add_argument('-d', '--'+PARAM_DELETE,   help="needs to display every HTTP call",  required=False, action='store_true')
@@ -81,8 +84,7 @@ def main(argv):
     deleteNeeded = False
     if getattr(args, PARAM_DELETE):
         deleteNeeded = True
-        print("----SUPPRESSION MODE ON ----\n")
-
+        print("----DELETE MODE ON ----\n")
 
     now = datetime.now()
     print("start = ", now)
@@ -91,66 +93,66 @@ def main(argv):
 
     sqliteConnection = ''
     try:
-        print('\n######### DATABASE CONNECTION #########')
         print(GRAVITYDB)
         sqliteConnection = sqlite3.connect(GRAVITYDB)
         cursor = sqliteConnection.cursor()
-        print("Database created and Successfully Connected to SQLite")
+        print("Successfully Connected to SQLite")
 
+        if deleteNeeded == True:
+            sqlite_Query = 	"DELETE FROM domainlist"
+            cursor.execute(sqlite_Query)
+            sqliteConnection.commit()	
+            print("Delete done")
+            sys.exit()
+
+        # GET MAX ID FROM AD LIST
+        sqlite_Query = 	"select max(id) FROM adlist"
+        result = cursor.execute(sqlite_Query)
+        maxId = result.fetchone()[0]
+
+        for list in getListsFromList(getattr(args, PARAM_LIST)):
+
+            
+            # CHECK THE FORMAT 'w, url' or 'b, url'
+            listValues = list.split(',')
+        
+            if len(listValues) == 2 and listValues[0] in [BLACKLIST_VALUE, WHITELIST_VALUE]:
+            
+                typeId = 1 if listValues[0] == 'b' else 0
+                LinkList = listValues[1]
+
+                # ALL DOMAINS FROM THE LIST WITHOUT EMPTY ONES
+                domainsList = getDomainsFromList(LinkList)
+                
+                if typeId == 1:
+                    maxId = maxId + 1
+                    sqlite_Query = 	"INSERT INTO adlist (id, address, enabled, number) VALUES (%d, '%s', 1, %d);" % (maxId, LinkList.strip(), len(domainsList))
+                    cursor.execute(sqlite_Query)
+                    sqliteConnection.commit()	
+                else:
+
+                    for domain in domainsList:
+                        sqlite_Query = 	"INSERT INTO domainlist (domain,type, comment) VALUES ('%s', %d, '');" % (domain.strip(), typeId)
+                        cursor.execute(sqlite_Query)
+
+                    sqliteConnection.commit()
 
     except sqlite3.Error as error:
-            print("Error while connecting to sqlite", error)
-            sys.exit()
- 
-    countErrors = 0
-    for list in getListsFromList(getattr(args, PARAM_LIST)):
-
-        
-        # CHECK THE FORMAT 'w, url' or 'b, url'
-        listValues = list.split(',')
-    
-        if len(listValues) == 2 and listValues[0] in [BLACKLIST_VALUE, WHITELIST_VALUE]:
-        
-            typeId = 1 if listValues[0] == 'b' else 0
-            LinkList = listValues[1]
-
-            # ALL DOMAINS FROM THE LIST WITHOUT EMPTY ONES
-            domainsList = getDomainsFromList(LinkList)
-            compteur = 0
-            for domain in domainsList:
-            
-                sqlite_Query = ''
-                if deleteNeeded == True:
-                    sqlite_Query = 	"DELETE FROM domainlist WHERE domain = '%s' AND type = %d;" % (domain, typeId)
-                elif deleteNeeded == False:
-                    sqlite_Query = 	"INSERT INTO domainlist (domain, type, comment) VALUES ('%s', %d, '');" % (domain, typeId)
-                    
-                try:
-                    cursor.execute(sqlite_Query)
-                    compteur += 1
-                except sqlite3.Error as error:
-                    countErrors += 1
-                    #print(domain+' is already in database')
-
-                # "DELETE FROM domainlist WHERE domain = '${domain}' AND type = ${typeId};"
-                # "INSERT INTO domainlist (domain,type,comment) VALUES ('${domain}',${typeId},'${comment}');"
-            print("\nvalues updated : %d / %d" % (compteur, len(domainsList)))
-            print("commit en cours")
-            sqliteConnection.commit()	
-            print("commit en done\n")
-            
-
-
-    if sqliteConnection:
-        sqliteConnection.close()
-        print("The SQLite connection is closed")
-
+        print("Error while connecting to sqlite", error)
+        sys.exit()
+    finally:
+        if sqliteConnection:
+            sqliteConnection.close()
+            print("The SQLite connection is closed")
+			
     print('######### END OF MANAGING #########\n')
 
+    print('######### UPDATE GRAVITY #########\n')
+    print(os.popen(PIHOLE_UPDATE_GRAVITY).read()+"\n")
+    print('######### END UPDATE GRAVITY #########\n')
 
 
-    print(' /!\\ NEED TO UPDATE GRAVITY /!\\ \n')
-
+    print('######### DONE :) #########\n')
 
     now = datetime.now()
     print("end = ", now)
